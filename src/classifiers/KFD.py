@@ -26,7 +26,7 @@ def cosine_similarity(X: np.ndarray, Y: np.ndarray = None) -> np.ndarray:
     
     return np.dot(X, Y.T)
 
-class KFD : 
+class KFD() : 
     """
     Kernel Fisher Discriminant
     """
@@ -46,7 +46,7 @@ class KFD :
 
         # compute pairwise kernel matrix
         K = self.kernel(X)  # (N, N)
-        total_mean = np.mean( K, axis=-1) # (N, )  
+        total_mean = np.mean( K, axis=-1).reshape(-1, 1) # (N, 1)  
 
         M = np.zeros((N, N))
         N = np.zeros((N, N))
@@ -55,11 +55,11 @@ class KFD :
             # compute class kernel matrix
             class_mask = Y == self.labels[j]
             class_kernel_matrices = K[:, class_mask]
-            class_means = np.mean(class_kernel_matrices, axis=-1) # (N, )
+            class_means = np.mean(class_kernel_matrices, axis=-1).reshape(-1, 1) # (N, 1)
             centering_matrices = np.eye(label_counts[j]) - 1/label_counts[j] # (n_j, n_j)
 
             class_centered = class_means - total_mean
-            M += class_centered @ class_centered.T
+            M += class_centered @ class_centered.T # (N, N)
             N += class_kernel_matrices @ centering_matrices @ class_kernel_matrices.T
 
         try :
