@@ -1,6 +1,7 @@
 ## data
 __*
-
+*.csv
+*.npy
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
