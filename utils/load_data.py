@@ -5,10 +5,12 @@ import matplotlib.pyplot as plt
 
 from pathlib import Path
 
-def reshape_images(X):    
+
+def reshape_images(X):
     X = X.reshape(X.shape[0], 3, 32, 32)
     X = np.moveaxis(X, 1, -1)
     return X
+
 
 def load_data(data_folder: Path, reshape=True) -> Tuple[np.ndarray]:
     Xtr = np.array(
@@ -23,7 +25,7 @@ def load_data(data_folder: Path, reshape=True) -> Tuple[np.ndarray]:
     if reshape:
         Xtr = reshape_images(Xtr)
         Xte = reshape_images(Xte)
-    
+
     return Xtr, Ytr, Xte
 
 
