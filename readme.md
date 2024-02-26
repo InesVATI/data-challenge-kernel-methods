@@ -8,4 +8,6 @@ To run the notebook:
 
 *Things to implement:*
 *. Multiclass SVM solver (i started implementing it in a notebook)
+    *. Need to decrease the parallelization so that it fits in memeory
+    *. Need to implement sparcification
 *. Gaussian subsampling layer convolution layer (implement it in JAX)
