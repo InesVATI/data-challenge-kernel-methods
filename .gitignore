@@ -1,5 +1,7 @@
 ## data
 __*
+*.so
+*.c
 *.csv
 *.npy
 ## Core latex/pdflatex auxiliary files:
