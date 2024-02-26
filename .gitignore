@@ -1,5 +1,7 @@
 ## data
-__*
+data/*
+## python virtual env
+*_env 
 *.so
 *.c
 *.csv
