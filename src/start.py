@@ -4,11 +4,13 @@ import pandas as pd
 from classifiers.KFD import KFD, cosine_similarity
 from pathlib import Path
 
+
 def compute_accuracy(Y_true, Y_pred):
     return np.mean(Y_true == Y_pred)
 
+
 if __name__ == "__main__":
-    data_folder = Path(__file__).parent.parent / '__data'
+    data_folder = Path(__file__).parent.parent / "__data"
     Xtr, Ytr, Xte = load_data(data_folder)
     # print('Nb train samples:', len(Xtr))
     # print('Nb test samples:', len(Xte))
@@ -24,11 +26,11 @@ if __name__ == "__main__":
 
     pred = classifier.predict(Xtr[:n_train])
     accuracy = compute_accuracy(Ytr[:n_train], pred)
-    print('Accuracy on trained data:', accuracy*100, '%')
+    print("Accuracy on trained data:", accuracy * 100, "%")
     pred = classifier.predict(Xtr[n_train:])
     accuracy = compute_accuracy(Ytr[n_train:], pred)
-    print('Accuracy on unseen images:', accuracy*100, '%')
-    
+    print("Accuracy on unseen images:", accuracy * 100, "%")
+
     # --- Save predictions ---
 
     # Yte = classifier.predict(Xte)

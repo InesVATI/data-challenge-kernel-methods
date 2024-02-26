@@ -1,3 +1,3 @@
-import jax 
+import jax
 import jax.numpy as jnp
-import jaxopt 
+import jaxopt
