@@ -1,5 +1,8 @@
 ## data
-__*
+*data
+*_env
+*.c
+*.cpython*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
