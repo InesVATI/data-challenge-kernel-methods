@@ -7,7 +7,7 @@ from jaxopt import BoxCDQP, ProjectedGradient, projection
 
 
 def rbf_kernel(x: jnp.array, x_prime: jnp.array, gamma=1):
-    return jnp.exp(-0.5 *gamma* jnp.linalg.norm(x - x_prime) ** 2)
+    return jnp.exp(-0.5 * gamma * jnp.linalg.norm(x - x_prime) ** 2)
 
 
 def poly_kernel(x: jnp.array, x_prime: jnp.array, a: float):
