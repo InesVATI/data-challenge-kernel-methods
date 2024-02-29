@@ -213,3 +213,4 @@ class MultiClassKernelSVM:
             preds = jnp.argsort(-prob, axis=0)[0, :]
         X = jnp.squeeze(X)
         return preds
+    
