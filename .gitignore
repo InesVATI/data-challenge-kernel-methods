@@ -1,9 +1,15 @@
 ## data
 *data
+## env
 *_env
+*.so
 *.c
-*.cpython*
-
+*.csv
+*.npy
+## package
+*.egg*
+*.toml:Zone.Identifier*
+*cpython*
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -17,7 +23,7 @@
 *.cb
 *.cb2
 .*.lb
-
+./build
 ## Intermediate documents:
 *.dvi
 *.xdv
