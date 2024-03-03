@@ -1,10 +1,15 @@
 ## data
 *data
+## env
 *_env
 *.so
 *.c
 *.csv
 *.npy
+## package
+*.egg*
+*.toml:Zone.Identifier*
+*cpython*
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
