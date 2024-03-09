@@ -6,14 +6,25 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 
-def load_data(data_folder: Path) -> Tuple[np.ndarray]:
+def reshape_images(X):
+    X = X.reshape(X.shape[0], 3, 32, 32)
+    X = np.moveaxis(X, 1, -1)
+    return X
+
+
+def load_data(data_folder: Path, reshape=True) -> Tuple[np.ndarray]:
     Xtr = np.array(
-        pd.read_csv(data_folder / "Xtr.csv", header=None, sep=",", usecols=range(3072))
+        pd.read_csv(data_folder + "/Xtr.csv", header=None, sep=",", usecols=range(3072))
     )
     Xte = np.array(
-        pd.read_csv(data_folder / "Xte.csv", header=None, sep=",", usecols=range(3072))
+        pd.read_csv(data_folder + "/Xte.csv", header=None, sep=",", usecols=range(3072))
     )
-    Ytr = np.array(pd.read_csv(data_folder / "Ytr.csv", sep=",", usecols=[1])).squeeze()
+    Ytr = np.array(
+        pd.read_csv(data_folder + "/Ytr.csv", sep=",", usecols=[1])
+    ).squeeze()
+    if reshape:
+        Xtr = reshape_images(Xtr)
+        Xte = reshape_images(Xte)
 
     return Xtr, Ytr, Xte
 
@@ -21,8 +32,8 @@ def load_data(data_folder: Path) -> Tuple[np.ndarray]:
 if __name__ == "__main__":
 
     root_folder = Path(__file__).parent.parent
-    data_folder = root_folder / "__data"
-    Xtr, Ytr, Xte = load_data(data_folder)
+    data_folder = root_folder / "data"
+    Xtr, Ytr, Xte = load_data(data_folder, reshape=False)
 
     train_images = (Xtr - Xtr.min()) / (Xtr.max() - Xtr.min())
     test_images = (Xte - Xte.min()) / (Xte.max() - Xte.min())

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "Cython", "numpy"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "kernelchallenge"
+version = "0.0.0"
+authors = [
+  { name="Ines Vati", email="ines.vati@eleves.enpc.fr" },
+]
+description = "Kernel classifiers for data challenge"
+readme = "readme.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: The Unlicense (Unlicense)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/InesVATI/data-challenge-kernel-methods"
+"Bug Tracker" = "https://github.com/InesVATI/data-challenge-kernel-methods/issues"
