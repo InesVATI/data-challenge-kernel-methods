@@ -1,8 +1,8 @@
-from kernelchallenge.load_data import load_data
+from load_data import load_data
 import numpy as np
 import pandas as pd
-from kernelchallenge.classifiers.KFD import KFD, cosine_similarity
-from kernelchallenge.classifiers.svm import MultiClassKernelSVM
+from KFD import KFD, cosine_similarity
+from svm import MultiClassKernelSVM
 from pathlib import Path
 
 
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # --- Save predictions ---
 
     Yte = classifier.predict(Xte)
-    Yte = {'Prediction' : Yte}
+    Yte = {"Prediction": Yte}
     dataframe = pd.DataFrame(Yte)
     dataframe.index += 1
-    dataframe.to_csv(data_folder / 'Yte.csv', index_label='Id')
+    dataframe.to_csv(data_folder / "Yte.csv", index_label="Id")

@@ -2,6 +2,7 @@ from jax import jit, vmap
 import jax.numpy as jnp
 import numpy as np
 
+
 def gaus_pooling(X, shape, size):
     pass
 

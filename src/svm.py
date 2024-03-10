@@ -4,8 +4,7 @@ import jax
 import jax.numpy as jnp
 from jax import vmap
 from jaxopt import BoxCDQP, ProjectedGradient, projection
-
-from kernelchallenge.utils import timeit
+from utils import timeit
 
 
 def rbf_kernel(x: jnp.array, x_prime: jnp.array, gamma=1):
@@ -165,7 +164,7 @@ class MultiClassKernelSVM:
         self.comp_num = comp_num
 
         self.kernel = kernel_func
-        
+
         self.threshold = threshold
         self.full_inference = (threshold == 0) and (comp_num == None)
 
@@ -213,4 +212,3 @@ class MultiClassKernelSVM:
             preds = jnp.argsort(-prob, axis=0)[0, :]
         X = jnp.squeeze(X)
         return preds
-    
