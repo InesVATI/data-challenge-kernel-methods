@@ -4,7 +4,7 @@ import jax
 import jax.numpy as jnp
 from jax import vmap
 from jaxopt import BoxCDQP, ProjectedGradient, projection
-from utils import timeit
+from src.utils import timeit
 
 
 def rbf_kernel(x: jnp.array, x_prime: jnp.array, gamma=1):
