@@ -11,6 +11,15 @@ def check_objective_value(arg, transforms):
             % (iteration + 1, objective)
         )
 
+def print_cluster_size(arg, transforms):
+    mask, centroids = arg
+    cluster_sizes = mask.sum(axis=1)
+    empty_clusters = cluster_sizes == 0
+    if jnp.any(empty_clusters):
+        print("empty cluster {}".format(jnp.where(empty_clusters)[0]))
+
+    # print('centroids nan ?', jnp.isnan(centroids).any())
+
 
 @jax.jit
 def choose_randomly(X, mask):
@@ -27,14 +36,20 @@ def compute_sum(X, mask):
 @jax.jit
 def cluster_update(cluster_id: int, assignments: jnp.ndarray, X: jnp.ndarray):
     mask = assignments == cluster_id
+    
     mask = mask.astype(jnp.int32)
-    # nb_elem = jnp.sum(mask)
+    nb_elem = jnp.sum(mask)
 
-    # centroid = jax.lax.cond(nb_elem==0, choose_randomly, compute_sum, X, mask)
-    centroid = jnp.sum(X * mask[:, None], axis=0)
+    centroid = jax.lax.cond(nb_elem==0, choose_randomly, compute_sum, X, mask)
+    # if jnp.sum(mask) == 0:
+    #     centroid = choose_randomly(X)
+    # else :
+    #     centroid = jnp.sum(X * mask[:, None], axis=0)
 
     norm_centroid = jnp.linalg.norm(centroid, axis=-1)
-    return centroid / norm_centroid
+    host_callback.id_tap(print_cluster_size, (mask, centroid))
+    
+    return centroid /( norm_centroid + 1e-8)
 
 
 @jax.jit
@@ -53,7 +68,7 @@ def step(X, centroids, prev_objective: float):
     objective = jnp.take_along_axis(
         cos_sim, jnp.expand_dims(assignments, axis=-1), axis=-1
     ).mean()
-    stop_criteria = jnp.abs(prev_objective - objective) / (jnp.abs(objective) + 1e-20)
+    stop_criteria = jnp.abs(prev_objective - objective) / (objective + 1e-8)
 
     return new_centroids, assignments, objective, stop_criteria
 
@@ -79,6 +94,7 @@ class SphericalKMeans:
         @jax.jit
         def while_step(arg):
             iteration, centroids, assignments, prev_objective, stop_criteria = arg
+
             new_centroids, assignments, objective, stop_criteria = step(
                 X, centroids, prev_objective
             )
