@@ -4,7 +4,7 @@ from typing import Callable
 
 
 def timeit(func: Callable) -> Callable:
-    """ Decorator for timing function execution time """
+    """Decorator for timing function execution time"""
 
     @wraps(func)
     def timeit_wrapper(*args, **kwargs):

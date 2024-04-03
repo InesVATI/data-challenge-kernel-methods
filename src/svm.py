@@ -4,12 +4,11 @@ import jax
 import jax.numpy as jnp
 from jax import vmap
 from jaxopt import BoxCDQP, ProjectedGradient, projection
+from src.utils import timeit
 
-from kernelchallenge.utils import timeit
 
-
-def rbf_kernel(x: jnp.array, x_prime: jnp.array):
-    return jnp.exp(-0.5 * jnp.linalg.norm(x - x_prime) ** 2)
+def rbf_kernel(x: jnp.array, x_prime: jnp.array, gamma=1):
+    return jnp.exp(-0.5 * gamma * jnp.linalg.norm(x - x_prime) ** 2)
 
 
 def poly_kernel(x: jnp.array, x_prime: jnp.array, a: float):
@@ -165,7 +164,7 @@ class MultiClassKernelSVM:
         self.comp_num = comp_num
 
         self.kernel = kernel_func
-        
+
         self.threshold = threshold
         self.full_inference = (threshold == 0) and (comp_num == None)
 
@@ -213,4 +212,3 @@ class MultiClassKernelSVM:
             preds = jnp.argsort(-prob, axis=0)[0, :]
         X = jnp.squeeze(X)
         return preds
-    
