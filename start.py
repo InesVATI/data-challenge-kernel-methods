@@ -1,41 +1,47 @@
-from load_data import load_data
-import numpy as np
+from src.load_data import load_data
+import jax.numpy as jnp
 import pandas as pd
-from KFD import KFD, cosine_similarity
-from svm import MultiClassKernelSVM
-from pathlib import Path
-
-
-def compute_accuracy(Y_true, Y_pred):
-    return np.mean(Y_true == Y_pred)
+from src.kernels import RBF
+from src.CKN import ModelCKN, ConvKN
+from src.svm import MultiClassKernelSVM
+import os
+import pickle
 
 
 if __name__ == "__main__":
-    data_folder = Path(__file__).parent.parent / "__data"
-    Xtr, Ytr, Xte = load_data(data_folder)
-    # print('Nb train samples:', len(Xtr))
-    # print('Nb test samples:', len(Xte))
-    # define learning algorithm here
-    # classifier.train(Ytr, Xtr)
-    # predict on the test data
-    # Yte = classifier.predict(Xte)
+    data_folder = os.path.join(os.getcwd(), 'data')
+    Xtr, Ytr, Xte = load_data(data_folder, reshape=True)
+    print(f"Xtr {Xtr.shape}; Ytr {Ytr.shape}; Xte {Xte.shape}")
 
-    # --- KFD classifier ---
-    n_train = 4000
-    classifier = KFD(cosine_similarity)
-    classifier.train(Ytr[:n_train], Xtr[:n_train])
+    models_folder = os.path.join(os.getcwd(), 'models')
 
-    pred = classifier.predict(Xtr[:n_train])
-    accuracy = compute_accuracy(Ytr[:n_train], pred)
-    print("Accuracy on trained data:", accuracy * 100, "%")
-    pred = classifier.predict(Xtr[n_train:])
-    accuracy = compute_accuracy(Ytr[n_train:], pred)
-    print("Accuracy on unseen images:", accuracy * 100, "%")
+    myCKN = ModelCKN(patch_sizes=[3, 2, 2], 
+                 out_channels=[64, 128, 256],
+                 subsampling_factors=[2, 4, 4],
+                 n_patch_per_img_for_kmean=20)
+    with open(f'{models_folder}/myckn_f.pkl', 'rb') as f:
+        myCKN = pickle.load(f)
 
-    # --- Save predictions ---
+    # Compute test features 
+    out_test = myCKN(Xte)
+    out_test = out_test.reshape(out_test.shape[0], -1)
 
-    Yte = classifier.predict(Xte)
+    data_mean = jnp.load(os.path.join(models_folder, 'scaler_features_means.npy'))
+    data_std = jnp.load(os.path.join(models_folder, 'scaler_features_std.npy'))
+
+    X = (out_test - data_mean)/data_std
+    print(f'X mean {X.mean(axis=0)} X var {X.var(axis=0)}')
+
+
+    kernel_func = RBF(sigma=jnp.sqrt(X.shape[1]))
+    my_svm = MultiClassKernelSVM(num_classes=10, kernel_func=kernel_func, c=1)
+    with open(f'{models_folder}/svm_full.pkl', 'rb') as f:
+        my_svm = pickle.load(f)
+
+    Yte = my_svm.predict(X)
     Yte = {"Prediction": Yte}
     dataframe = pd.DataFrame(Yte)
     dataframe.index += 1
-    dataframe.to_csv(data_folder / "Yte.csv", index_label="Id")
+
+    dataframe.to_csv(f"{data_folder}/Yte.csv", index_label="Id")
+    
