@@ -7,6 +7,7 @@
 *.c
 *.csv
 *.npy
+*.zip
 ## package
 *.egg*
 *.toml:Zone.Identifier*
