@@ -1,6 +1,5 @@
 ## data
 *data
-*models
 ## env
 *_env
 *.so
@@ -10,8 +9,7 @@
 *.zip
 ## package
 *.egg*
-*.toml:Zone.Identifier*
-*cpython*
+*:Zone.Identifier*
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
